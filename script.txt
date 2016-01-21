@@ -40,6 +40,11 @@ kubectl delete rc ijulia
 ## Install Deis v2 alpha
 
 helm --version
+helm repo add deis https://github.com/deis/charts
 helm up
-helm install deis/deis-dev
-k get po
+helm fetch deis/deis-dev
+helm generate deis-dev
+helm install deis-dev
+kubectl get pods
+kubectl get namespaces
+kubectl get pods --namespace=deis
