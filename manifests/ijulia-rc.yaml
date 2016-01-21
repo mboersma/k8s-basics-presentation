@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: ijulia
+spec:
+  replicas: 1
+  selector:
+    app: ijulia
+  template:
+    metadata:
+      labels:
+        app: ijulia
+    spec:
+      containers:
+        - name: ijulia
+          image: quay.io/mboersma/ijulia:latest
+          ports:
+            - containerPort: 8888
+              name: http

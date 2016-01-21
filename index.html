@@ -44,7 +44,8 @@
 					<h1>Demo</h1>
 					<h3>Kubernetes Basics</h3>
 					<p>
-						<small>by Matt Boersma - mboersma@deis.com</small>
+						<small>by Matt Boersma - mboersma@deis.com</small><br />
+						<small>thanks to Gerred Dillon, Jason Hansen, and Kelsey Hightower!</small>
 					</p>
 				</section>
 
@@ -80,22 +81,109 @@ Available Commands:
 				</section>
 
 				<section>
+					<h2>Kelsey's K8S Kore Koncepts</h2>
+					<p>
+						<ul>
+							<li>Containers</li>
+							<li>Nodes</li>
+							<li>Pods</li>
+							<li>Labels</li>
+							<li>Services</li>
+						</ul>
+					</p>
+				</section>
+
+				<section>
+					<h2>Containers</h2>
+					<p>
+						<ul>
+							<li>Unix processes, *NOT* VMs</li>
+							<li>Application + dependencies = image</li>
+							<li>Runtime environment (cgroups, namespaces, env vars)</li>
+						</ul>
+						<pre><code class="bash" data-trim contenteditable>
+FROM alpine:3.3
+
+# install common packages
+RUN apk add --update-cache curl bash openssl sudo && rm -rf /var/cache/apk/*
+
+# install etcdctl and confd
+RUN apk add --update-cache curl tar \
+    && curl -sSL https://github.com/coreos/etcd/releases/download/v2.2.1/etcd-v2.2.1-linux-amd64.tar.gz \
+    | tar -vxz -C /usr/local/bin --strip=1 etcd-v2.2.1-linux-amd64/etcdctl \
+    && chown root:root /usr/local/bin/etcdctl \
+    && curl -sSL -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 \
+    && chmod +x /usr/local/bin/confd
+
+# define execution environment
+CMD ["/app/bin/boot"]
+EXPOSE 8000
+						</code></pre>
+					</p>
+				</section>
+
+				<section>
+					<h2>Node</h2>
+					<p>Runs containers and proxies service requests.<br />
+					   Supporting processes:
+						<ul>
+							<li>docker</li>
+							<li>kubelet</li>
+							<li>proxy</li>
+						</ul>
+					</p>
+				</section>
+
+				<section>
+					<h2>Pod</h2>
+					<p>Represents a logical application.
+						<ul>
+							<li>One or more containers</li>
+							<li>Shared namespace</li>
+						</ul>
+					</p>
+				</section>
+
+				<section>
+					<h2>Replication Controller</h2>
+					<p>Manages a replicated set of pods<br />
+						<ul>
+							<li>Creates pods from a template</li>
+							<li>Makes sure the desired number of pods are running</li>
+							<li>Self-healing</li>
+						</ul>
+					</p>
+				</section>
+
+				<section>
+					<h2>Service</h2>
+					<p>Service discovery for pods.<br />
+						<ul>
+							<li>Proxy runs on each node</li>
+							<li>Virtual IP per service (no port collisions)</li>
+							<li>Basic round-robin algorithm</li>
+							<li>Dynamic backends based on label queries</li>
+						</ul>
+					</p>
+				</section>
+
+				<section>
 					<h2>K8S Runs Everywhere</h2>
 					<p></p>
 				</section>
 
 				<section>
-					<h2>Create a Vagrant Cluster</h2>
-					<script type="text/javascript" src="https://asciinema.org/a/26v6x3wp15p2e7g8yf5ym4bd7.js" id="asciicast-26v6x3wp15p2e7g8yf5ym4bd7" async></script>
+					<h2>Demo: Create a Vagrant Cluster</h2>
+					<script type="text/javascript" src="https://asciinema.org/a/34188.js" id="asciicast-34188" data-size="medium" data-theme="monokai" async></script>
 				</section>
 
 				<section>
-					<h2></h2>
-					<p></p>
+					<h2>Demo: Install and Scale an RC</h2>
+					<script type="text/javascript" src="https://asciinema.org/a/34267.js" id="asciicast-34267" data-size="medium" data-theme="monokai" async></script>
 				</section>
 
 				<section>
-					<h2></h2>
+					<h2>Demo: Install Deis v2 alpha</h2>
 					<p></p>
 				</section>
 

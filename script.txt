@@ -1,0 +1,45 @@
+## Provision a vagrant k8s cluster
+
+export NUM_MINIONS=2
+export KUBERNETES_PROVIDER=vagrant
+curl -sS https://get.k8s.io | bash
+cd kubernetes/
+ls
+cd cluster/
+ln -s kubectl.sh kubectl
+export PATH=`pwd`:$PATH
+
+kubectl get nodes
+kubectl get pods
+kubectl get services
+
+
+## Install and Scale an RC Manifest
+
+cat manifests/ijulia-rc.yaml
+kubectl create -f manifests/ijulia-rc.yaml
+kubectl describe rc ijulia
+kubectl get pods
+kubectl describe pod <pod_id>
+kubectl logs -f <pod_id>
+kubectl exec <pod> -- ls -alh
+kubectl scale rc ijulia --replicas=4
+kubectl get pods --output=wide
+curl http://10.245.1.3:8888
+cat manifests/ijulia-svc.yaml
+kubectl create -f manifests/ijulia-svc.yaml
+kubectl get service
+kubectl get service ijulia -o yaml
+curl -sS http://10.245.1.3:<port>/tree
+# open in browser
+# cleanup
+kubectl delete svc ijulia
+kubectl delete rc ijulia
+
+
+## Install Deis v2 alpha
+
+helm --version
+helm up
+helm install deis/deis-dev
+k get po
